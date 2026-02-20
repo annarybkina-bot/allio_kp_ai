@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировка XS-27.88</title>
+    <!-- Библиотека для рендеринга markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .floor-plan-section {
+            position: relative;
+            flex: 0 0 45%;
+            max-width: 45%;
+        }
+
+        .floor-plan-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        .star-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+
+        .star-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .star-icon svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Пульсация иконки */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0.8;
+            }
+        }
+
+        .star-icon {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Tooltip для иконок - всегда видимый */
+        .star-icon::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 1;
+            pointer-events: none;
+            z-index: 100;
+            font-weight: 400;
+        }
+
+        .star-icon::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-bottom-color: rgba(0, 0, 0, 0.75);
+            opacity: 1;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Секция с параметрами */
+        .parameters-section {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .apartment-header {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .apartment-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .prices-container {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .price-block {
+            flex: 1;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .price-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .price-per-m2 {
+            font-size: 16px;
+            color: #999;
+        }
+
+        .characteristics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+        }
+
+        .characteristic-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .characteristic-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .characteristic-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Блок "Помещения и площади" */
+        .rooms-section {
+            margin-top: 32px;
+        }
+
+        .rooms-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .rooms-cards {
+            display: flex;
+            gap: 16px;
+        }
+
+        .room-card {
+            flex: 1;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            min-width: 0;
+            aspect-ratio: 1;
+            min-height: 160px;
+        }
+
+        .room-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .room-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .room-card-total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .room-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .room-item-name {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .room-item-area {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* Модальное окно чата */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 40px;
+        }
+
+        .chat-modal.active {
+            display: flex;
+        }
+
+        .chat-window {
+            width: 90%;
+            max-width: 500px;
+            height: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-right: 0;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .chat-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .chat-message {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message.user {
+            align-items: flex-end;
+        }
+
+        .chat-message.assistant {
+            align-items: flex-start;
+        }
+
+        .chat-message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .chat-message.user .chat-message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.assistant .chat-message-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Стили для markdown форматирования */
+        .chat-message-bubble h1,
+        .chat-message-bubble h2,
+        .chat-message-bubble h3,
+        .chat-message-bubble h4 {
+            margin: 16px 0 8px 0;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .chat-message-bubble h1 {
+            font-size: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        .chat-message-bubble h2 {
+            font-size: 18px;
+        }
+
+        .chat-message-bubble h3 {
+            font-size: 16px;
+        }
+
+        .chat-message-bubble h4 {
+            font-size: 14px;
+        }
+
+        .chat-message-bubble p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .chat-message-bubble ul,
+        .chat-message-bubble ol {
+            margin: 8px 0;
+            padding-left: 24px;
+            line-height: 1.8;
+        }
+
+        .chat-message-bubble li {
+            margin: 4px 0;
+        }
+
+        .chat-message-bubble ul {
+            list-style-type: disc;
+        }
+
+        .chat-message-bubble ul ul {
+            list-style-type: circle;
+            margin-left: 16px;
+        }
+
+        .chat-message-bubble ul ul ul {
+            list-style-type: square;
+        }
+
+        .chat-message-bubble ol {
+            list-style-type: decimal;
+        }
+
+        .chat-message-bubble strong,
+        .chat-message-bubble b {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .chat-message-bubble em,
+        .chat-message-bubble i {
+            font-style: italic;
+        }
+
+        .chat-message-bubble code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .chat-message-bubble pre {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .chat-message-bubble pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .chat-message-bubble blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 16px;
+            margin: 8px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .chat-message-bubble hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 16px 0;
+        }
+
+        .chat-message-time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+
+        .chat-input-container {
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .chat-send {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .chat-send:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .chat-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chat-loading {
+            display: none;
+            text-align: center;
+            padding: 12px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .chat-loading.active {
+            display: block;
+        }
+
+        .chat-loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Карта 2ГИС */
+        .maps-row {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+            align-items: stretch;
+        }
+        .map-block {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+        .map-block .map-container {
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .map-block .map-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Звёздочки у карты: в ряд, не перекрываются */
+        .map-stars .star-icon {
+            position: relative;
+            top: auto;
+            right: auto;
+        }
+        .star-icon-pink:hover,
+        .star-icon-yellow:hover {
+            transform: scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="floor-plan-section">
+            <img src="https://offer.allio.ru/images/99c77706/bb8d/072147101d0430852f2a542135729504.jpg" 
+                 alt="Планировка XS-27.88" 
+                 class="floor-plan-image">
+            
+            <div class="star-icon" id="starIcon" data-tooltip="Расскажу, подойдёт ли вам эта квартира">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Большая центральная звезда -->
+                    <path d="M12 2 L14.5 9 L22 9.5 L16 14.5 L18 22 L12 17.5 L6 22 L8 14.5 L2 9.5 L9.5 9 Z" fill="#ffd700" stroke="#764ba2" stroke-width="0.5"/>
+                    <!-- Маленькие искорки -->
+                    <circle cx="4" cy="4" r="1.2" fill="#667eea"/>
+                    <circle cx="20" cy="5" r="0.8" fill="#667eea"/>
+                    <circle cx="19" cy="19" r="1" fill="#667eea"/>
+                    <circle cx="5" cy="20" r="0.9" fill="#667eea"/>
+                    <!-- Мерцающие точки -->
+                    <circle cx="8" cy="4" r="0.6" fill="#ffd700"/>
+                    <circle cx="16" cy="3" r="0.5" fill="#ffd700"/>
+                    <circle cx="22" cy="12" r="0.7" fill="#ffd700"/>
+                    <circle cx="2" cy="16" r="0.6" fill="#ffd700"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="parameters-section">
+            <div class="apartment-header">
+                Аквилон Leaves 2 очередь 1 корпус 1 подъезд, Московский р-н
+            </div>
+            <h1 class="apartment-title">Студия 27.88 м²</h1>
+            
+            <div class="prices-container">
+                <div class="price-block">
+                    <div class="price-label">Цена при 100% оплате или в ипотеку</div>
+                    <div class="price-value">12 074 394 р.</div>
+                    <div class="price-per-m2">433 084 р./м²</div>
+                </div>
+                <div class="price-block">
+                    <div class="price-label">Цена базовая</div>
+                    <div class="price-value">16 099 192 р.</div>
+                    <div class="price-per-m2">577 446 р./м²</div>
+                </div>
+            </div>
+
+            <div class="characteristics">
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Этаж</div>
+                    <div class="characteristic-value">11 из 12</div>
+                </div>
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Жилая</div>
+                    <div class="characteristic-value">14.84 м²</div>
+                </div>
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Номер</div>
+                    <div class="characteristic-value">101</div>
+                </div>
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Из окон</div>
+                    <div class="characteristic-value">двор</div>
+                </div>
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Спальни</div>
+                    <div class="characteristic-value">1</div>
+                </div>
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Сдача</div>
+                    <div class="characteristic-value">I квартал 2026</div>
+                </div>
+                <div class="characteristic-item">
+                    <div class="characteristic-label">Потолок</div>
+                    <div class="characteristic-value">2.73 м</div>
+                </div>
+            </div>
+
+            <div class="rooms-section">
+                <h2 class="rooms-title">Помещения и площади</h2>
+                <div class="rooms-cards">
+                    <div class="room-card">
+                        <div class="room-card-header">
+                            <div class="room-card-title">Жилая</div>
+                            <div class="room-card-total">14.8 м²</div>
+                        </div>
+                        <div class="room-item">
+                            <div class="room-item-name">Комната</div>
+                            <div class="room-item-area">14.84 м²</div>
+                        </div>
+                    </div>
+                    <div class="room-card">
+                        <div class="room-card-header">
+                            <div class="room-card-title">Нежилая</div>
+                            <div class="room-card-total">10.5 м²</div>
+                        </div>
+                        <div class="room-item">
+                            <div class="room-item-name">Коридор</div>
+                            <div class="room-item-area">5.75 м²</div>
+                        </div>
+                        <div class="room-item">
+                            <div class="room-item-name">Санузел</div>
+                            <div class="room-item-area">4.75 м²</div>
+                        </div>
+                    </div>
+                    <div class="room-card">
+                        <div class="room-card-header">
+                            <div class="room-card-title">Другая</div>
+                            <div class="room-card-total">5.1 м²</div>
+                        </div>
+                        <div class="room-item">
+                            <div class="room-item-name">Лоджия</div>
+                            <div class="room-item-area">5.08 м²</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Секция с поэтажной планировкой -->
+    <div class="container" style="margin-top: 40px;">
+        <div class="floor-plan-section">
+            <img src="/etazh.jpg" 
+                 alt="Поэтажная планировка" 
+                 class="floor-plan-image">
+            
+            <div class="star-icon" id="starIcon2" data-tooltip="Подскажу, удачное ли расположение у квартиры на этаже.">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Большая центральная звезда -->
+                    <path d="M12 2 L14.5 9 L22 9.5 L16 14.5 L18 22 L12 17.5 L6 22 L8 14.5 L2 9.5 L9.5 9 Z" fill="#ffd700" stroke="#764ba2" stroke-width="0.5"/>
+                    <!-- Маленькие искорки -->
+                    <circle cx="4" cy="4" r="1.2" fill="#667eea"/>
+                    <circle cx="20" cy="5" r="0.8" fill="#667eea"/>
+                    <circle cx="19" cy="19" r="1" fill="#667eea"/>
+                    <circle cx="5" cy="20" r="0.9" fill="#667eea"/>
+                    <!-- Мерцающие точки -->
+                    <circle cx="8" cy="4" r="0.6" fill="#ffd700"/>
+                    <circle cx="16" cy="3" r="0.5" fill="#ffd700"/>
+                    <circle cx="22" cy="12" r="0.7" fill="#ffd700"/>
+                    <circle cx="2" cy="16" r="0.6" fill="#ffd700"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="parameters-section">
+            <h2 class="apartment-title">Поэтажная планировка</h2>
+            <p style="font-size: 16px; color: #666; line-height: 1.6;">
+                Расположение квартир на этаже. Выделенная квартира XS-27.88 расположена в удобном месте с окнами во двор.
+            </p>
+        </div>
+    </div>
+
+    <!-- Модальное окно чата -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-window">
+            <div class="chat-header">
+                <h3>ИИ-консультант <span id="chatLocationSourceBadge" style="display:none; font-size:12px; opacity:0.9; margin-left:6px;">(2ГИС)</span></h3>
+                <button class="chat-close" id="chatClose">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Приветственное сообщение будет добавлено через addMessage для единообразия -->
+            </div>
+            <div class="chat-loading" id="chatLoading">ИИ думает</div>
+            <div class="chat-input-container">
+                <input type="text" 
+                       class="chat-input" 
+                       id="chatInput" 
+                       placeholder="Введите ваш вопрос..."
+                       autocomplete="off">
+                <button class="chat-send" id="chatSend">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const starIcon = document.getElementById('starIcon');
+        const starIcon2 = document.getElementById('starIcon2');
+        const chatModal = document.getElementById('chatModal');
+        const chatClose = document.getElementById('chatClose');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const chatLoading = document.getElementById('chatLoading');
+
+        // Функция открытия чата с автоматическим вопросом
+        window.openChat = function openChat(autoQuestion = null) {
+            const isAlreadyOpen = chatModal.classList.contains('active');
+            if (window.currentContext !== 'location') {
+                var badge = document.getElementById('chatLocationSourceBadge');
+                if (badge) badge.style.display = 'none';
+                if (chatModal) chatModal.removeAttribute('data-location-map-source');
+            }
+            chatModal.classList.add('active');
+            chatInput.focus();
+            
+            // Добавляем приветственное сообщение только при первом открытии (без эффекта печатания)
+            if (!chatOpened) {
+                addMessage('Привет! Я ваш помощник по этой квартире 👋\nХотите узнать детали, задать вопрос или что-то уточнить?', false, false);
+                chatOpened = true;
+            }
+            
+            // ✅ Если передан автоматический вопрос И чат не был уже открыт, заполняем поле ввода (НЕ отправляем)
+            if (autoQuestion && !isAlreadyOpen) {
+                // Небольшая задержка для плавности
+                setTimeout(() => {
+                    chatInput.value = autoQuestion;
+                    chatInput.focus(); // Фокус на поле ввода, чтобы пользователь мог отредактировать
+                }, 300);
+            }
+        }
+
+        // Открытие модального окна при клике на иконки с разными вопросами
+        let chatOpened = false;
+        let apartmentIntroShown = false; // второе сообщение при клике на звёздочку планировки
+        let floorIntroShown = false; // второе сообщение при клике на звёздочку поэтажной планировки
+        let locationIntroShown = false; // второе сообщение при открытии ассистента по расположению
+        window.currentContext = 'apartment'; // Делаем глобальной для доступа из других скриптов
+        let currentContext = window.currentContext; // 'apartment', 'floor' или 'location'
+        
+        starIcon.addEventListener('click', () => {
+            currentContext = 'apartment';
+            window.currentContext = 'apartment';
+            openChat('Класс, расскажи про особенности квартиры');
+            // Второе сообщение ассистента именно для клика по планировке квартиры
+            if (!apartmentIntroShown) {
+                addMessage('Расскажу про планировку и помогу понять, подойдёт ли вам эта квартира.', false, false);
+                apartmentIntroShown = true;
+            }
+        });
+        starIcon2.addEventListener('click', () => {
+            currentContext = 'floor';
+            window.currentContext = 'floor';
+            openChat('Да, расскажи про особенности расположения на этаже');
+            // Второе сообщение ассистента именно для клика по поэтажной планировке
+            if (!floorIntroShown) {
+                addMessage('Помогу разобраться с расположением квартиры на этаже — на что важно обратить внимание?', false, false);
+                floorIntroShown = true;
+            }
+        });
+        
+        // Источник открытия чата по расположению: '2gis' или 'ors'. Фиксируем в data-атрибуте при открытии, чтобы при отправке сообщения использовался правильный источник.
+        window.locationMapSource = null;
+        function openLocationChat(defaultQuestion, mapSource) {
+            defaultQuestion = defaultQuestion || 'Сколько времени займет дорога до центра?';
+            mapSource = (mapSource && (mapSource === 'ors' || mapSource === '2gis')) ? mapSource : '2gis';
+            currentContext = 'location';
+            window.currentContext = 'location';
+            window.locationMapSource = mapSource;
+            var modal = document.getElementById('chatModal');
+            if (modal) modal.setAttribute('data-location-map-source', mapSource);
+            var badge = document.getElementById('chatLocationSourceBadge');
+            if (badge) {
+                badge.textContent = mapSource === 'ors' ? 'OpenRouteService' : '2ГИС';
+                badge.style.display = 'inline';
+            }
+            if (window.openChat) {
+                window.openChat(defaultQuestion);
+            } else if (typeof openChat !== 'undefined') {
+                openChat(defaultQuestion);
+            }
+            // Второе сообщение ассистента для вопросов про расположение района
+            if (!locationIntroShown) {
+                addMessage('Могу подсказать про инфраструктуру, транспорт и окружение.\nЧто интересно узнать первым делом?', false, false);
+                locationIntroShown = true;
+            }
+        }
+        function initMapStarIcon() {
+            const starIcon4Element = document.getElementById('starIcon4');
+            if (starIcon4Element && !starIcon4Element.hasAttribute('data-listener-added')) {
+                starIcon4Element.setAttribute('data-listener-added', 'true');
+                starIcon4Element.addEventListener('click', function() {
+                    openLocationChat('Сколько времени займет дорога до центра?', '2gis');
+                });
+            }
+            const starIcon5Element = document.getElementById('starIcon5');
+            if (starIcon5Element && !starIcon5Element.hasAttribute('data-listener-added')) {
+                starIcon5Element.setAttribute('data-listener-added', 'true');
+                starIcon5Element.addEventListener('click', function() {
+                    openLocationChat('Сколько времени займет дорога до центра?', 'ors');
+                });
+            }
+            if (!starIcon4Element || !starIcon5Element) {
+                setTimeout(initMapStarIcon, 100);
+            }
+        }
+        
+        // Запускаем инициализацию после загрузки DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMapStarIcon);
+        } else {
+            // DOM уже загружен
+            initMapStarIcon();
+        }
+        
+        // Также пробуем инициализировать после полной загрузки страницы
+        window.addEventListener('load', function() {
+            setTimeout(initMapStarIcon, 200);
+        });
+
+        // Закрытие модального окна
+        chatClose.addEventListener('click', () => {
+            chatModal.classList.remove('active');
+        });
+
+        // Закрытие при клике вне окна
+        chatModal.addEventListener('click', (e) => {
+            if (e.target === chatModal) {
+                chatModal.classList.remove('active');
+            }
+        });
+
+        // Отправка сообщения по Enter
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Отправка сообщения по клику на кнопку
+        chatSend.addEventListener('click', sendMessage);
+
+        // Добавление сообщения в чат с эффектом печатания для ИИ
+        function addMessage(text, isUser, useTypingEffect = true) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : 'assistant'}`;
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-message-bubble';
+            
+            const time = document.createElement('div');
+            time.className = 'chat-message-time';
+            const now = new Date();
+            time.textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.appendChild(bubble);
+            messageDiv.appendChild(time);
+            chatMessages.appendChild(messageDiv);
+            
+            // Для сообщений пользователя - выводим сразу
+            if (isUser) {
+                bubble.textContent = text;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else if (!useTypingEffect) {
+                // Для ИИ без эффекта печатания (приветствие)
+                if (typeof marked !== 'undefined') {
+                    bubble.innerHTML = marked.parse(text);
+                } else {
+                    bubble.textContent = text;
+                }
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                // Для ИИ - эффект печатания (ответы на вопросы)
+                let currentText = '';
+                let index = 0;
+                const speed = 15; // Скорость печатания в миллисекундах
+                
+                function typeText() {
+                    if (index < text.length) {
+                        currentText += text[index];
+                        
+                        // Рендерим markdown в процессе печатания
+                        if (typeof marked !== 'undefined') {
+                            bubble.innerHTML = marked.parse(currentText);
+                        } else {
+                            bubble.textContent = currentText;
+                        }
+                        
+                        index++;
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        setTimeout(typeText, speed);
+                    }
+                }
+                
+                typeText();
+            }
+        }
+
+        // Функция для конвертации изображения в base64
+        async function imageUrlToBase64(url) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            } catch (error) {
+                console.error('Ошибка конвертации изображения:', error);
+                return null;
+            }
+        }
+
+        // Отправка сообщения в LLM
+        // Маршруты по расположению считаются на бэкенде через API 2ГИС (locationMapSource === '2gis').
+
+        // История чата для памяти LLM (предыдущие пары user/assistant)
+        let chatHistory = [];
+        const CHAT_HISTORY_MAX_MESSAGES = 20; // последние 20 сообщений (10 пар), чтобы не превысить лимит токенов
+
+        // Функция для определения, является ли вопрос о маршрутах
+        function isRouteQuestion(message) {
+            const routeKeywords = ['время', 'ехать', 'доехать', 'добраться', 'маршрут', 'путь', 
+                                 'аэропорт', 'метро', 'звездная', 'пулково', 'расстояние', 'минут', 'часов'];
+            const messageLower = message.toLowerCase();
+            return routeKeywords.some(keyword => messageLower.includes(keyword));
+        }
+        
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Добавляем сообщение пользователя
+            addMessage(message, true);
+            chatInput.value = '';
+            
+            // Показываем индикатор загрузки
+            chatLoading.classList.add('active');
+            chatSend.disabled = true;
+            
+            try {
+                // Определяем URL API (используем тот же порт, что и основной сервер)
+                const apiUrl = window.location.origin + '/api/chat';
+                
+                // Выбираем нужное изображение в зависимости от контекста
+                let imageUrl = null;
+                let context = window.currentContext || currentContext || 'apartment';
+                // Если в шапке чата виден бейдж OpenRouteService/2ГИС — принудительно контекст расположения (чтобы бэкенд вызвал ORS/2GIS)
+                var locationBadge = document.getElementById('chatLocationSourceBadge');
+                if (locationBadge && locationBadge.style.display !== 'none' && locationBadge.textContent) {
+                    var chatModalEl = document.getElementById('chatModal');
+                    if (locationBadge.textContent.indexOf('OpenRouteService') !== -1) {
+                        context = 'location';
+                        window.currentContext = 'location';
+                        window.locationMapSource = 'ors';
+                        if (chatModalEl) chatModalEl.setAttribute('data-location-map-source', 'ors');
+                    } else if (locationBadge.textContent.indexOf('2ГИС') !== -1) {
+                        context = 'location';
+                        window.currentContext = 'location';
+                        window.locationMapSource = '2gis';
+                        if (chatModalEl) chatModalEl.setAttribute('data-location-map-source', '2gis');
+                    }
+                }
+                if (context === 'floor') {
+                    // Для поэтажной планировки - конвертируем локальное изображение в base64
+                    console.log('🔄 Конвертирую поэтажный план в base64...');
+                    imageUrl = await imageUrlToBase64(window.location.origin + '/etazh_optimized.jpg') || 
+                               await imageUrlToBase64(window.location.origin + '/etazh.jpg');
+                    console.log('📐 Используем поэтажную планировку');
+                } else if (context === 'apartment') {
+                    // Для планировки квартиры - используем публичный URL
+                    imageUrl = 'https://offer.allio.ru/images/99c77706/bb8d/072147101d0430852f2a542135729504.jpg';
+                    console.log('🏠 Используем планировку квартиры');
+                } else if (context === 'location') {
+                    // Для расположения - не отправляем изображение
+                    console.log('📍 Вопрос о расположении и инфраструктуре');
+                }
+                
+                // Маршруты по расположению: только при открытии с иконки 2ГИС бэкенд сделает запросы к API 2ГИС. Яндекс API отключён — с фронта не вызываем.
+                let routeData = null;
+                
+                // Подготавливаем данные для отправки
+                const apartmentDataPayload = {
+                    planningImageUrl: imageUrl || '',
+                    context: context
+                };
+                if (context === 'location') {
+                    var source = (document.getElementById('chatModal') && document.getElementById('chatModal').getAttribute('data-location-map-source')) || window.locationMapSource;
+                    if (source === 'ors' || source === '2gis') {
+                        apartmentDataPayload.locationMapSource = source;
+                    }
+                    console.log('[Location] Отправляю locationMapSource:', apartmentDataPayload.locationMapSource);
+                }
+                const payload = {
+                    message: message,
+                    apartmentData: apartmentDataPayload,
+                    routeData: routeData,
+                    chatHistory: chatHistory.slice(-CHAT_HISTORY_MAX_MESSAGES)
+                };
+                
+                // Логируем для отладки
+                console.log('📡 Отправляю запрос на:', apiUrl);
+                console.log('📡 Payload:', JSON.stringify(payload, null, 2));
+                console.log('📤 Отправляю в AI:', {
+                    message: payload.message,
+                    context: context,
+                    imageType: imageUrl ? (imageUrl.startsWith('data:') ? 'base64' : 'url') : 'none'
+                });
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    let errorMessage = 'Ошибка сервера';
+                    let isServerError = false;
+                    
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorData.message || `HTTP ${response.status}`;
+                    } catch (e) {
+                        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+                    }
+                    
+                    // Проверяем технические ошибки (проблемы с сервером/API)
+                    if (response.status === 500 && errorMessage.includes('OPENAI_API_KEY')) {
+                        errorMessage = '⚠️ API ключ OpenAI не настроен. Обратитесь к администратору.';
+                        isServerError = true;
+                    } else if (errorMessage.includes('requests')) {
+                        errorMessage = '⚠️ Ошибка конфигурации сервера. Обратитесь к администратору.';
+                        isServerError = true;
+                    } else if (response.status >= 500) {
+                        errorMessage = '⚠️ Ошибка сервера. Попробуйте позже или обратитесь к администратору.';
+                        isServerError = true;
+                    }
+                    
+                    if (isServerError) {
+                        addMessage(errorMessage, false);
+                    } else {
+                        // Для других ошибок направляем к менеджеру
+                        const managerMessage = `К сожалению, я не могу ответить на этот вопрос прямо сейчас. 
+
+Обратитесь, пожалуйста, к нашему менеджеру для получения подробной консультации:
+
+👤 **Анна Рыбкина**
+📧 Email: anna.rybkina@allio.ru
+📞 Телефон: +7 (906) 265-56-41
+
+Анна с удовольствием ответит на все ваши вопросы и поможет!`;
+                        addMessage(managerMessage, false);
+                    }
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    chatHistory.push({ role: 'user', content: message });
+                    chatHistory.push({ role: 'assistant', content: data.message });
+                    addMessage(data.message, false);
+                } else {
+                    // Для ошибок от LLM направляем к менеджеру
+                    const managerMessage = `К сожалению, я не могу ответить на этот вопрос прямо сейчас. 
+
+Обратитесь, пожалуйста, к нашему менеджеру для получения подробной консультации:
+
+👤 **Анна Рыбкина**
+📧 Email: anna.rybkina@allio.ru
+📞 Телефон: +7 (906) 265-56-41
+
+Анна с удовольствием ответит на все ваши вопросы и поможет!`;
+                    addMessage(managerMessage, false);
+                }
+            } catch (error) {
+                console.error('Ошибка при отправке сообщения:', error);
+                console.error('Детали ошибки:', {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                });
+                
+                // Для критических ошибок (сервер не отвечает) показываем техническую ошибку
+                let errorMessage = '⚠️ Не удалось подключиться к серверу. ';
+                const isLoadFailed = (error.message && error.message.includes('Load failed')) ||
+                    (error.message && error.message.includes('Failed to fetch')) ||
+                    (error.name === 'TypeError' && error.message && error.message.includes('fetch'));
+                
+                if (isLoadFailed) {
+                    errorMessage += 'Откройте страницу по адресу http://localhost:5002/simple (сервер должен быть запущен: python3 server.py). ';
+                    errorMessage += 'Если открывали с другого адреса или с файла — запрос к ИИ не сработает.';
+                } else if (error.name === 'NetworkError' || (error.message && error.message.includes('network'))) {
+                    errorMessage += 'Проверьте подключение к интернету и убедитесь, что сервер запущен на ' + (window.location.origin || 'http://localhost:5002');
+                } else {
+                    errorMessage += 'Попробуйте позже или обратитесь к администратору.';
+                    errorMessage += '\n\nОшибка: ' + error.message;
+                }
+                
+                addMessage(errorMessage, false);
+            } finally {
+                // Скрываем индикатор загрузки
+                chatLoading.classList.remove('active');
+                chatSend.disabled = false;
+                chatInput.focus();
+            }
+        }
+    </script>
+
+    <!-- Блок "Расположение": заголовок, подсказка по вопросам, карты -->
+    <div class="container" style="margin-top: 40px;">
+        <div style="width: 100%;">
+            <h2 class="apartment-title" style="margin-bottom: 24px;">Расположение</h2>
+            <p style="margin-bottom: 16px; color: #555; font-size: 14px; line-height: 1.5;">Нажмите на звёздочку у карты и спросите: маршруты и время в пути до точки; или где ближайшая школа, поликлиника, аптека, гипермаркет — поиск выполняется в радиусе 2–3 км, в ответ попадёт только несколько ближайших объектов.</p>
+            <div class="maps-row">
+                <div class="map-block">
+                    <div class="map-label">2ГИС</div>
+                    <div style="position: relative;">
+                        <div id="map2gis" class="map-container"></div>
+                        <div class="map-stars" style="position: absolute; top: 12px; right: 12px; z-index: 100; display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+                            <div class="star-icon star-icon-yellow" id="starIcon4" data-tooltip="Желтая — 2ГИС (маршруты и инфраструктура)">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2 L14.5 9 L22 9.5 L16 14.5 L18 22 L12 17.5 L6 22 L8 14.5 L2 9.5 L9.5 9 Z" fill="#ffd700" stroke="#b8860b" stroke-width="0.5"/>
+                                    <circle cx="4" cy="4" r="1.2" fill="#667eea"/>
+                                    <circle cx="20" cy="5" r="0.8" fill="#667eea"/>
+                                    <circle cx="19" cy="19" r="1" fill="#667eea"/>
+                                    <circle cx="5" cy="20" r="0.9" fill="#667eea"/>
+                                    <circle cx="8" cy="4" r="0.6" fill="#ffd700"/>
+                                    <circle cx="16" cy="3" r="0.5" fill="#ffd700"/>
+                                    <circle cx="22" cy="12" r="0.7" fill="#ffd700"/>
+                                    <circle cx="2" cy="16" r="0.6" fill="#ffd700"/>
+                                </svg>
+                            </div>
+                            <div class="star-icon star-icon-pink" id="starIcon5" data-tooltip="Хотите понять, насколько вам подойдёт этот район? Я помогу.">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2 L14.5 9 L22 9.5 L16 14.5 L18 22 L12 17.5 L6 22 L8 14.5 L2 9.5 L9.5 9 Z" fill="#ec407a" stroke="#ad1457" stroke-width="0.5"/>
+                                    <circle cx="4" cy="4" r="1.2" fill="#f48fb1"/>
+                                    <circle cx="20" cy="5" r="0.8" fill="#f48fb1"/>
+                                    <circle cx="19" cy="19" r="1" fill="#f48fb1"/>
+                                    <circle cx="5" cy="20" r="0.9" fill="#f48fb1"/>
+                                    <circle cx="8" cy="4" r="0.6" fill="#ec407a"/>
+                                    <circle cx="16" cy="3" r="0.5" fill="#ec407a"/>
+                                    <circle cx="22" cy="12" r="0.7" fill="#ec407a"/>
+                                    <circle cx="2" cy="16" r="0.6" fill="#ec407a"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение 2GIS MapGL API (документация: https://docs.2gis.com/ru) -->
+    <script src="https://mapgl.2gis.com/api/js/v1"></script>
+
+    <!-- Инициализация карты 2ГИС (MapGL API, ключ: docs.2gis.com) -->
+    <script>
+        (function init2GISMap() {
+            var DGIS_KEY = 'ddecc3e5-7ad6-48a3-bb7e-5d14a932b612';
+            // 2GIS использует [longitude, latitude]; Магнитогорская 3к2, СПб
+            var complexCoordinates2GIS = [30.417411, 59.936175];
+
+            function tryInit() {
+                if (typeof mapgl === 'undefined') return false;
+                var container = document.getElementById('map2gis');
+                if (!container) return false;
+                try {
+                    var map = new mapgl.Map('map2gis', {
+                        center: complexCoordinates2GIS,
+                        zoom: 16,
+                        key: DGIS_KEY
+                    });
+                    new mapgl.Marker(map, { coordinates: complexCoordinates2GIS });
+                    console.log('✓ Карта 2ГИС успешно инициализирована');
+                    return true;
+                } catch (err) {
+                    console.error('Ошибка инициализации 2ГИС:', err);
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Не удалось загрузить карту 2ГИС. Проверьте ключ API.</div>';
+                    return true;
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    if (!tryInit()) setTimeout(function() { tryInit(); }, 500);
+                });
+            } else {
+                if (!tryInit()) setTimeout(function() { tryInit(); }, 500);
+            }
+            window.addEventListener('load', function() {
+                setTimeout(function() { tryInit(); }, 300);
+            });
+        })();
+    </script>
+</body>
+</html>

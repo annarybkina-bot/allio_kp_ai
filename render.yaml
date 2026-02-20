@@ -1,0 +1,20 @@
+# Render Blueprint: один Web Service для сервера и страницы /simple
+# Использование: New → Blueprint → подключить репозиторий, Render подхватит render.yaml
+
+services:
+  - type: web
+    name: kp-simple
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      # PORT задаётся Render автоматически
+      - key: OPENAI_API_KEY
+        sync: false
+    # Опционально: раскомментируйте и задайте ключи в Dashboard → Environment
+    # - key: MAP_API_PROVIDER
+    #   value: yandex
+    # - key: DGIS_API_KEY
+    #   sync: false
+    # - key: ORS_API_KEY
+    #   sync: false
